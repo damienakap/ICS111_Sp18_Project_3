@@ -30,9 +30,6 @@ public class TestStage {
 		box_col.elasticity = 0.001;
 		box.pullToFront();
 		
-		//light.group.rotateTo(40);
-		//player.hit_box.graphic.pullToFront();
-		
 	}
 	
 	public static void update() {
@@ -68,6 +65,16 @@ public class TestStage {
 		if(player.getVelocity().length()> player.moveSpeed/4){
 			player.hit_box.angularVelocity = w*player.getVelocity().length()/player.moveSpeed;
 		}
+		
+		
+		double s = player.getVelocity().length();
+		Vector dir = new Vector(0,1);
+		dir.rotate(-thetaP);
+		dir.multiply(s);
+		dir.multiply( Math.signum( player.getVelocity().dot(dir) ) );
+		
+		player.setVelocity(dir.x, dir.y);
+		
 		
 		//Rotates the screen
 		Vector vt = new Vector(player.group.getXCenter(), player.group.getYCenter());
