@@ -1,0 +1,26 @@
+//0
+//0 Editor: Name
+//0 Date of Last Edit: 04/05/2018
+//0 Map Version: 0.1
+//0
+//0	Map Name: ___
+//0
+//0	" //# " are read modes
+//0 " //0 " are comment lines
+//0	" //1 " reads map textures
+//0	" //2 " reads map static(don't move) collider
+//0			- define the position and points of the polygon with the center inside.
+//0	lines with out " //# " are data for the mode set above the line.
+//0
+//0 #### map Textures ####
+//0
+//0	 Format: image, pos_x, pos_y, rotation, scale,
+//1
+img/floor_tile_01.png,0,0,0,20,
+//0
+//0 #### map static colliders ####
+//0							p1_x, p2_x,...,pn_x			p1_y, p2_y,...,pn_y
+//0 Format: pos_x, pos_y, [list points x position] ,#, [list points y position] ,#,
+//2
+300,0,150,250,250,150,#,-150,-150,150,150,#,
+//0

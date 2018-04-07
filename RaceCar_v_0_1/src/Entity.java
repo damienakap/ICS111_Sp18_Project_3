@@ -19,6 +19,9 @@ public class Entity{
 	protected EZGroup group;
 	protected EZGroup worldGroup;
 	
+	public double getRotation() { return this.group.getRotation(); }
+	public double getAngularVelocity() { return this.hit_box.angularVelocity; }
+	public void setAngularVelocity( double w ) { this.hit_box.angularVelocity = w; }
 	/**
 	 * Sets the entities velocity
 	 * @param x - Velocity in the x direction

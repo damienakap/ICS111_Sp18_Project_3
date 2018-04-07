@@ -14,38 +14,31 @@ public class MapLoader {
 	
 	
 	public static Random rand = new Random();
-	public static ArrayList<Collider> wallColliders = new ArrayList<Collider>();
-	public static ArrayList<EZGroup> walls = new ArrayList<EZGroup>();
-	public static ArrayList<PolyImage> wallTextures = new ArrayList<PolyImage>();
 	
-	public static ArrayList<EZGroup> grounds = new ArrayList<EZGroup>();
-	public static ArrayList<PolyImage> groundTextures = new ArrayList<PolyImage>();
+	public static ArrayList<EZImage> mT = new ArrayList<EZImage>();		// Map Textures
+	public static ArrayList<Collider> mSC = new ArrayList<Collider>();	// Map Static Colliders
+	
+	public static ArrayList<EZGroup> mCG = new ArrayList<EZGroup>();	// Map Collider Groups
 	
 	public static ArrayList<NavNode> navigationNodes = new ArrayList<NavNode>();
-	public static ArrayList<SpawnNode> spawnNodes = new ArrayList<SpawnNode>();
 	
 	public static BufferedReader reader;
 	
 	private static ArrayList<Integer> tempList = new ArrayList<Integer>();
 	
 	public static void unLoadMap() {
-		for(Collider c : wallColliders) { c.dispose(); }
-		wallColliders.clear();
-		for( PolyImage pi : wallTextures ) {pi.dispose();}
-		wallTextures.clear();
-		for( EZGroup g : walls ) { EZ.removeEZElement(g); }
-		walls.clear();
+		//clear map
+		for(Collider c : mSC) { c.dispose(); }
+		mSC.clear();
+		for( EZImage i : mT ) {
+			if(i.hasParent()) {i.getParent().removeElement(i);}
+			EZ.removeEZElement(i);
+		}
+		mT.clear();
 		
-		for( PolyImage pi : groundTextures ) { pi.dispose(); }
-		groundTextures.clear();
-		for( EZGroup g : grounds ) { EZ.removeEZElement(g); }
-		grounds.clear();
-		
+		// clear navigation nodes
 		for( NavNode n : navigationNodes ) { n.dispose(); }
 		navigationNodes.clear();
-		for( SpawnNode s : spawnNodes ) { s.dispose(); }
-		spawnNodes.clear();
-		navigationNodes.add(new NavNode(0, 0));
 		
 	}
 	
@@ -61,15 +54,11 @@ public class MapLoader {
 			
 			int mode = 0;
 			/*									
-				1: read wall data,				draw layer: 9
-				2: read ground data, 			draw layer: 5
-				3: read nav node data,			
-				4: read spawn node data,		
-				5: read collidable object data	draw layer: 8
+				1: 	read textures data,
+				2: 	read static colliders data,
+				3:  read collidable object data,			
+				4:	read nav node data,
 				
-				Note:
-					player drawn on layer 7
-					other entities drawn on layer 6
 			*/
 			
 			// read Map data from file
@@ -79,80 +68,64 @@ public class MapLoader {
 					mode = Integer.valueOf( line.substring(2, 3) ) ;
 				}else {
 					tempList.clear();
-					if(mode==1 || mode == 2) {
+					if(mode==1) {
 						sub0 = line.substring( 0, line.indexOf(","));
 						line = line.substring(line.indexOf(",")+1, line.length());
 						// Get Image directory
 						imageDir = sub0;
 						
-						int[] pointsX = null, pointsY = null;
+						int[] data = new int[4];
 						// Get object Data
+						for( int l=0; l<4; l++) {
+							sub0 = line.substring( 0, line.indexOf(","));
+							line = line.substring(line.indexOf(",")+1, line.length());
+							data[l] = Integer.valueOf(sub0);
+						}
+						
+						mT.add( EZ.addImage(imageDir, data[0], data[1]) );
+						mT.get(mT.size()-1).rotateTo( data[2] );
+						mT.get(mT.size()-1).scaleTo( data[3] );
+						GE.worldGroup.addElement( mT.get(mT.size()-1) );
+						
+					}else if(mode==2) {
+						int[] pos = new int[2];
+						
+						sub0 = line.substring( 0, line.indexOf(","));
+						line = line.substring(line.indexOf(",")+1, line.length());
+						pos[0] = Integer.valueOf(sub0);
+						
+						sub0 = line.substring( 0, line.indexOf(","));
+						line = line.substring(line.indexOf(",")+1, line.length());
+						pos[1] = Integer.valueOf(sub0);
+						
+						tempList.clear();
+						int[] px = null, py = null;
 						for(int l=0; l<2; l++) {
 							sub0 = line.substring( 0, line.indexOf(","));
 							line = line.substring(line.indexOf(",")+1, line.length());
 							
 							while(!sub0.equals("#")) {
-								
 								tempList.add( Integer.valueOf(sub0) );
 								
 								sub0 = line.substring( 0, line.indexOf(","));
 								line = line.substring(line.indexOf(",")+1, line.length());
-								
 							}
 							
 							if(l==0) {
-								pointsX = new int[tempList.size()];
-								for(int x=0; x<tempList.size(); x++) { pointsX[x] = tempList.get(x); }
+								px = new int[tempList.size()];
+								for( int i=0; i<tempList.size(); i++) { px[i] = tempList.get(i); }
 							}else {
-								pointsY = new int[tempList.size()];
-								for(int x=0; x<tempList.size(); x++) { pointsY[x] = tempList.get(x); }
+								py = new int[tempList.size()];
+								for( int i=0; i<tempList.size(); i++) { py[i] = tempList.get(i); }
 							}
 							tempList.clear();
 						}
-						// get translation to location on map
-						for(int l=0; l<2; l++) {
-							sub0 = line.substring( 0, line.indexOf(","));
-							line = line.substring(line.indexOf(",")+1, line.length());
-							
-							tempList.add(Integer.valueOf(sub0));
-						}
 						
+						mCG.add(EZ.addGroup());
+						mSC.add( new PolyCollider( mCG.get(mCG.size()-1), px, py, 4, 10) );
+						mSC.get( mSC.size()-1 ).addToCollisionGroups(10);
+						GE.worldGroup.addElement( mCG.get(mCG.size()-1) );
 						
-						if(mode==1) {
-							// Create a wall
-							walls.add(EZ.addGroup());
-							wallColliders.add( new PolyCollider(walls.get(walls.size()-1), pointsX, pointsY, 4, 10) );
-							wallColliders.get(wallColliders.size()-1).addToCollisionGroups(10);
-							wallTextures.add(new PolyImage(imageDir, wallColliders.get(wallColliders.size()-1).graphic, false));
-							wallTextures.get(wallTextures.size()-1).tiles = true;
-							GE.worldGroup.addElement(walls.get(walls.size()-1));
-							walls.get(walls.size()-1).setParent(GE.worldGroup);
-							
-							walls.get(walls.size()-1).translateTo(tempList.get(0), tempList.get(1));
-							wallTextures.get(wallTextures.size()-1).clip = wallColliders.get(wallColliders.size()-1).graphic.getBounds();
-							
-							wallTextures.get(wallTextures.size()-1).setLayer(9);
-							
-							line = null;
-							
-						}else if(mode==2) {
-							// Create a ground texture
-							grounds.add(EZ.addGroup());
-							groundTextures.add( new PolyImage(imageDir, EZ.addPolygon(pointsX, pointsY, new Color(100,0,0,0), true), false) );
-							groundTextures.get(groundTextures.size()-1).tiles = true;
-							grounds.get(grounds.size()-1).addElement( groundTextures.get(groundTextures.size()-1).element );
-							groundTextures.get(groundTextures.size()-1).element.setParent(grounds.get(grounds.size()-1));
-							GE.worldGroup.addElement( grounds.get(grounds.size()-1) );
-							grounds.get(grounds.size()-1).setParent(GE.worldGroup);
-							
-							grounds.get(grounds.size()-1).translateTo(tempList.get(0), tempList.get(1));
-							groundTextures.get(groundTextures.size()-1).clip = groundTextures.get(groundTextures.size()-1).element.getBounds();
-							
-							groundTextures.get(groundTextures.size()-1).setLayer(7);
-							
-							line = null;
-							
-						}
 					}else if(mode==3) {
 						
 						// get node x position
