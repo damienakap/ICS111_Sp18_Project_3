@@ -1,6 +1,6 @@
 
 /**
- * Copyright (c) 04/04/2018
+ * Copyright (c) 04/06/2018
  * @author Damien Apilando
  * 
  * ICS111
@@ -701,15 +701,13 @@ class PhysicsManager {
 	 * apply drag to colliders
 	 */
 	private static void applyAirDrag() {
-		ListIterator<Collider> i = objectList.listIterator();
-		while(i.hasNext()) {
-			Collider c = i.next();
-				Vector vel = c.velocity.copy();
-				vel.multiply(dragCoeff*c.iMass);
-				c.velocity.x-=(vel.x*timeDelta);
-				c.velocity.y-=(vel.y*timeDelta);
-				if(c.type==3) 
-					c.angularVelocity-=c.angularVelocity*angularDragCoeff*c.momentInertia*timeDelta/1000;
+		for( Collider c :  objectList){
+			Vector vel = c.velocity.copy();
+			vel.multiply(dragCoeff*c.iMass);
+			c.velocity.x-=(vel.x*timeDelta);
+			c.velocity.y-=(vel.y*timeDelta);
+			if(c.type==3) 
+				c.angularVelocity-=c.angularVelocity*angularDragCoeff*c.momentInertia*timeDelta/1000;
 		}
 	}
 	
@@ -735,6 +733,7 @@ class PhysicsManager {
 		}
 	}
 	public static void applyVelocity( Collider c ) {
+		
 		if(c.velocity.length()>max_velocity) {
 			c.velocity.normalize();
 			c.velocity.multiply(max_velocity);
@@ -745,7 +744,7 @@ class PhysicsManager {
 		);
 		if(Math.abs(c.angularVelocity)>max_angular_velocity)
 			c.angularVelocity = Math.signum(c.angularVelocity)*max_angular_velocity;
-		c.graphic.getParent().rotateBy( (c.angularVelocity*180/Math.PI) *EZ.getDeltaTime()/1000);
+		c.graphic.getParent().rotateBy( (c.angularVelocity*180/Math.PI) *EZ.getDeltaTime()/1000 );
 	}
 	/**
 	 * Clear collided objects
@@ -1574,7 +1573,7 @@ class Collider {
 	public double rotationLast = 0;
 	public double rotationLastTime = 0;
 	public double rotationLastSleepTime = 1;
-	public double rotationLastThresh = 1.05;
+	public double rotationLastThresh = 0.0;
 	
 	
 	public void updateSleepRotation() {
@@ -2039,21 +2038,44 @@ class WAVSound {
 	
 	private EZSound sound;
 	private FloatControl gainControl;
-	
+	/**
+	 * Creates a .wav sound object with volume and seek controls.
+	 * @param file 
+	 */
 	public WAVSound( String file ) {
 		this.sound = new EZSound(file);
 		this.gainControl = (FloatControl)this.sound.sound.getControl(FloatControl.Type.MASTER_GAIN);
 	}
-	
+	/**
+	 * 
+	 * @param time - position of sound in seconds
+	 */
 	public void seek(double time) { this.sound.setMicrosecondPosition((int)(time*1000000)); }
+	/**
+	 * Play the sound.
+	 */
 	public void play() { this.sound.play(); }
+	/**
+	 * Stop the sound.
+	 */
 	public void stop() { this.sound.stop(); }
+	/**
+	 * Play the sound in a loop.
+	 */
 	public void loop() { this.sound.loop(); }
+	/**
+	 * Pause the sound. Remembers the last position when paused.
+	 */
 	public void pause() { this.sound.pause(); }
-	
+	/**
+	 * set the gain of the sound
+	 * @param value 
+	 */
 	public void setGain(float value) { this.gainControl.setValue(value); }
 	public float getGain() { return this.gainControl.getValue(); }
-	
+	/**
+	 * Disposes the sound when done. Do not use sound after calling.
+	 */
 	public void dispose() { this.sound.sound.close(); }
 	
 }
@@ -2113,11 +2135,18 @@ class Keyboard extends KeyAdapter {
     		//System.out.print("Key Released: "); System.out.println(e.getKeyCode());
     	}
     }
-	
+	/**
+	 * Prints the Keys being pressed.
+	 */
 	public static void printInput() {
-		System.out.print("Pressed mouse button: ");
-		for( int i=0; i<256; i++) {
-			if(Keys[i]) { System.out.print(i+", "); }
+		boolean p = false;
+		ArrayList<Integer> k = new ArrayList<Integer>();
+		for(int i=0; i<Keys.length; i++) {
+			if(Keys[i]) { k.add(i); p = true;}
+		}
+		if(p){
+			System.out.print("Pressed Key #: ");
+			for(int i=0; i<k.size(); i++) { System.out.print(k.get(i)+", "); }
 			System.out.println("");
 		}
 	}
@@ -2182,13 +2211,20 @@ class Mouse implements MouseListener, MouseMotionListener{
 			ButtonsJustReleased[i] = false;
 		}
 	}
-	
+	/**
+	 * Prints the buttons pressed.
+	 */
 	public static void printInput() {
-		System.out.print("Pressed Mouse Button #: ");
-		for(int i=0; i<5; i++) {
-			if(Buttons[i]) { System.out.print(i+", "); }
+		boolean p = false;
+		ArrayList<Integer> k = new ArrayList<Integer>();
+		for(int i=0; i<Buttons.length; i++) {
+			if(Buttons[i]) { k.add(i); p = true;}
 		}
-		System.out.println("");
+		if(p){
+			System.out.print("Pressed Mouse Button #: ");
+			for(int i=0; i<k.size(); i++) { System.out.print(k.get(i)+", "); }
+			System.out.println("");
+		}
 	}
 	
 	@Override
