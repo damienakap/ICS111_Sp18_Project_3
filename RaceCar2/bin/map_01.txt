@@ -1,0 +1,120 @@
+//0
+//0 Editor: Damien Apilando
+//0 Date of Last Edit: 04/05/2018
+//0 Map Version: 0.1
+//0
+//0	Map Name: ___
+//0
+//0	" //# " are read modes
+//0 " //0 " are comment lines
+//0	" //1 " reads map textures
+//0	" //2 " reads map static(don't move) collider
+//0			- define the position and points of the polygon with the center inside.
+//0	" //4 " read navigation node data
+//0	lines with out " //# " are data for the mode set above the line.
+//0
+//0 #### map Textures ####
+//0
+//0	 Format: image, pos_x, pos_y, rotation, scale,
+//0  1100x1100 px
+//0
+//1  Left off road
+img/road_cross_T.png,-1100,1100,90,15,
+img/road_T.png,-2200,1100,90,15,
+img/road_T.png,-3300,1100,90,15,
+img/road_T.png,-4400,1100,90,15,
+//0
+//1	 Left most vertical road
+img/road_turn_BR.png,0,6600,-90,15,
+img/road_T.png,0,5500,0,15,
+img/road_T.png,0,4400,0,15,
+img/road_T.png,0,3300,0,15,
+img/road_cross_T.png,0,2200,0,15,
+img/road_cross_3_T.png,0,1100,90,15,
+img/road_cross_T.png,0,0,180,15,
+img/road_T.png,0,-1100,0,15,
+img/road_T.png,0,-2200,0,15,
+img/road_T.png,0,-3300,0,15,
+img/road_turn_BR.png,0,-4400,0,15,
+//0
+//1  Top road
+img/road_T.png,1100,-4400,90,15,
+img/road_cross_T.png,2200,-4400,90,15,
+img/road_cross_4.png,3300,-4400,0,15,
+img/road_cross_T.png,4400,-4400,-90,15,
+img/road_T.png,5500,-4400,90,15,
+img/road_cross_T.png,6600,-4400,90,15,
+img/road_cross_4.png,7700,-4400,0,15,
+img/road_cross_T.png,8800,-4400,-90,15,
+img/road_T.png,9900,-4400,90,15,
+img/road_T.png,11000,-4400,90,15,
+img/road_turn_BR.png,12100,-4400,90,15,
+//0
+//1  Top loop
+img/road_cross_T.png,3300,-5500,180,15,
+img/road_turn_BR.png,3300,-6600,0,15,
+img/road_T.png,4400,-6600,90,15,
+img/road_T.png,5500,-6600,90,15,
+img/road_T.png,6600,-6600,90,15,
+img/road_turn_BR.png,7700,-6600,90,15,
+img/road_cross_T.png,7700,-5500,180,15,
+//0
+//1  Bottom road
+img/road_T.png,1100,6600,90,15,
+img/road_T.png,2200,6600,90,15,
+img/road_T.png,3300,6600,90,15,
+img/road_T.png,4400,6600,90,15,
+img/road_T.png,5500,6600,90,15,
+img/road_T.png,6600,6600,90,15,
+img/road_turn_BR.png,7700,6600,180,15,
+//0
+//1  Mid-Right road
+img/road_cross_T.png,7700,5500,0,15,
+img/road_cross_4.png,7700,4400,0,15,
+img/road_cross_T.png,7700,3300,180,15,
+img/road_T.png,7700,2200,0,15,
+img/road_T.png,7700,1100,0,15,
+img/road_T.png,7700,0,0,15,
+img/road_T.png,7700,-1100,0,15,
+img/road_T.png,7700,-2200,0,15,
+img/road_cross_T.png,7700,-3300,0,15,
+//0
+//1 Mid-Left road
+img/road_cross_T.png,6600,4400,90,15,
+img/road_T.png,5500,4400,90,15,
+img/road_T.png,4400,4400,90,15,
+img/road_turn_BR.png,3300,4400,-90,15,
+img/road_T.png,3300,3300,0,15,
+img/road_turn_BR.png,3300,2200,0,15,
+img/road_T.png,4400,2200,90,15,
+img/road_turn_BR.png,5500,2200,180,15,
+img/road_T.png,5500,1100,0,15,
+img/road_T.png,5500,0,0,15,
+img/road_T.png,5500,-1100,0,15,
+img/road_turn_BR.png,5500,-2200,90,15,
+img/road_T.png,4400,-2200,90,15,
+img/road_turn_BR.png,3300,-2200,-90,15,
+img/road_cross_T.png,3300,-3300,0,15,
+//0
+//1 Right most road
+img/road_cross_T.png,8800,4400,-90,15,
+img/road_T.png,9900,4400,90,15,
+img/road_T.png,11000,4400,90,15,
+img/road_turn_BR.png,12100,4400,180,15,
+img/road_T.png,12100,3300,0,15,
+img/road_T.png,12100,2200,0,15,
+img/road_turn_BR.png,12100,1100,0,15,
+img/road_T.png,13200,1100,90,15,
+img/road_turn_BR.png,14300,1100,180,15,
+img/road_T.png,14300,0,0,15,
+img/road_turn_BR.png,14300,-1100,90,15,
+img/road_T.png,13200,-1100,90,15,
+img/road_turn_BR.png,12100,-1100,-90,15,
+img/road_T.png,12100,-2200,0,15,
+img/road_T.png,12100,-3300,0,15,
+//0
+//0 #### map static colliders ####
+//0							p1_x, p2_x,...,pn_x			p1_y, p2_y,...,pn_y
+//0 Format: pos_x, pos_y, [list points x position] ,#, [list points y position] ,#,
+//2
+//0

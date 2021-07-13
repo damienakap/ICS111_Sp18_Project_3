@@ -1,0 +1,27 @@
+//0
+//0 Editor: Damien Apilando
+//0 Date of Last Edit: 04/05/2018
+//0 Map Version: 0.1
+//0
+//0	Map Name: ___
+//0
+//0	" //# " are read modes
+//0 " //0 " are comment lines
+//0	" //1 " reads map textures
+//0	" //2 " reads map static(don't move) collider
+//0			- define the position and points of the polygon with the center inside.
+//0 " //3 " Dynamic Objects
+//0			- 1:
+//0	" //4 " read navigation node data
+//0	lines with out " //# " are data for the mode set above the line.
+//0
+//0  #### Trash Can ####
+//4
+4,-1000,-1100,0,1.5,
+4,5300,-3500,0,1.5,
+4,11400,5350,0,1.5,
+//0
+//0 #### Road Block ####
+//4
+5,-800,1100,90,8,
+//0
