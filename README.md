@@ -7,3 +7,5 @@ Respawn: R</br>
 toggle headlights: F</br>
 Rocket: E
 </p>
+
+Learned about collision detection and node based path finding.
